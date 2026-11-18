@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import {
-  Lancamento,
-  LancamentoInput
-} from '../../models/lancamento.model';
+//import { Lancamento, LancamentoInput, LancamentoRequest, LancamentoResponse } from '../../models/lancamento.model';
+import { LancamentoRequest, LancamentoResponse } from '../../models/lancamento.model';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -10,25 +8,37 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
+
 export class LancamentoService {
-  private readonly API = `${environment.apiUrl}/lancamentos`;
+  //private readonly baseUrl = `http://localhost:8080/api/usuarios`;
+  private readonly baseUrl = `${environment.apiUrl}/usuarios`;
 
   constructor(private http:HttpClient){}
 
-  listar(): Observable<Lancamento[]>{
-    return this.http.get<Lancamento[]>(this.API);
+  // listar(): Observable<Lancamento[]>{
+  //   return this.http.get<Lancamento[]>(this.baseUrl);
+  // }
+
+  listar(usuarioId: number): Observable<LancamentoResponse[]> {
+    return this.http.get<LancamentoResponse[]>(
+      `${this.baseUrl}/${usuarioId}/lancamentos`);
   }
 
-  buscarPorId(id: number): Observable<Lancamento> {
-    return this.http.get<Lancamento>(`${this.API}/${id}`);
+  // buscarPorId(id: number): Observable<Lancamento> {
+  //   return this.http.get<Lancamento>(`${this.API}/${id}`);
+  // }
+  
+  cadastrar(usuarioId: number, dados: LancamentoRequest):
+      Observable<LancamentoResponse> {
+    return this.http.post<LancamentoResponse>(
+      `${this.baseUrl}/${usuarioId}/lancamentos`, dados);
   }
 
-  cadastrar(dados: LancamentoInput): Observable<Lancamento> {
-    return this.http.post<Lancamento>(this.API,dados);
+  atualizar(usuarioId: number, id: number, dados: LancamentoRequest):
+      Observable<LancamentoResponse> {
+    return this.http.put<LancamentoResponse>(
+      `${this.baseUrl}/${usuarioId}/lancamentos/${id}`, dados);
   }
 
-  atualizar(id: number, dados: LancamentoInput): Observable<Lancamento> {
-    return this.http.put<Lancamento>(`${this.API}/${id}`,dados);
-  }
 
 }
