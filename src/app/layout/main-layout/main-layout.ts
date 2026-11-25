@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   imports: [RouterOutlet,RouterLink,RouterLinkActive],
@@ -7,4 +8,13 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   styleUrl: './main-layout.css',
   templateUrl: './main-layout.html',
 })
-export class MainLayout {}
+export class MainLayout {
+  
+  private auth = inject(AuthService);
+  private router = inject(Router);
+  sair() {
+    this.auth.logout();
+    this.router.navigate(['/login']);
+  }
+
+}
